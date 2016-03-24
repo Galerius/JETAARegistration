@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">JETAA</string>
+    <string name="app_name">JETAA Registration</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="no">No</string>
@@ -11,5 +11,6 @@
     <string name="ConsulateInfo">Consulate-General of Japan</string>
     <string name="ConsulateRequest">The Consulate-General of Japan (CGJ) has requested that we provide them with information about JET alumni living within their jurisdiction. PNWJETAA will have no control over how the Consulate uses your information should you choose to share it with them. Please choose from one of the following options.</string>
     <string name="ConsulateYes">Yes, PNWJETAA can share the information I provide on this form with the CGJ</string>
+    <string name="ConsulateYesKinda">Yes, but only my public information can be provided to the CGJ (name, JET info, city/state of residence and job status / position)</string>
     <string name="ConsulateNo">No, PNWJETAA cannot share the information I provide on this form with the CGJ</string>
 </resources>

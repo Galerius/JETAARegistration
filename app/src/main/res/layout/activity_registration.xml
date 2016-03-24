@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#e1e6ff">
+    android:background="#e1e6ff"
+    android:id="@+id/sv">
     <LinearLayout
         android:id="@+id/TopLayout"
         android:layout_width="fill_parent"
@@ -493,19 +494,26 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical"
-            android:id="@+id/ConsulateInfoBool">
+            android:id="@+id/ConsulateInfo">
             <RadioButton
                 android:id="@+id/ConsulateYES"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="left"
                 android:layout_width="wrap_content"
                 android:layout_height="70dp"
                 android:text="@string/ConsulateYes"/>
+
+            <RadioButton
+                android:id="@+id/ConsulateYESKinda"
+                android:layout_gravity="left"
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                android:text="@string/ConsulateYesKinda"/>
             <Space
                 android:layout_width="30dp"
                 android:layout_height="wrap_content" />
             <RadioButton
                 android:id="@+id/ConsulateNO"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="left"
                 android:layout_width="wrap_content"
                 android:layout_height="70dp"
                 android:text="@string/ConsulateNo" />

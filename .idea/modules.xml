@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/JETAA.iml" filepath="$PROJECT_DIR$/JETAA.iml" />
+      <module fileurl="file://$PROJECT_DIR$/JETAARegistration.iml" filepath="$PROJECT_DIR$/JETAARegistration.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
 </project>
-

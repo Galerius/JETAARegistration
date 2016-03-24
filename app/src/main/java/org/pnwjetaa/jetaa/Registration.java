@@ -2,6 +2,7 @@ package org.pnwjetaa.jetaa;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -15,50 +16,74 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ScrollView;
+
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.security.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class Registration extends ActionBarActivity {
 
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
+    DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
-        Button submitButton = (Button)findViewById(R.id.submit);
+        final Button submitButton = (Button) findViewById(R.id.submit);
 
-        final Spinner POSspinner = (Spinner)findViewById(R.id.PositionSpinner);
-        String[] POSItems = new String[]{"ALT","CIR"};
-        ArrayAdapter<String> POSAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,POSItems);
+        final Spinner POSspinner = (Spinner) findViewById(R.id.PositionSpinner);
+        String[] POSItems = new String[]{"ALT", "CIR"};
+        ArrayAdapter<String> POSAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, POSItems);
         POSspinner.setAdapter(POSAdapter);
 
-        final Spinner Statespinner = (Spinner)findViewById(R.id.StateSpinner);
-        String[] StateItems = new String[]{"WA","ID","MT"};
-        ArrayAdapter<String> StateAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,StateItems);
+        final Spinner Statespinner = (Spinner) findViewById(R.id.StateSpinner);
+        String[] StateItems = new String[]{"WA", "ID", "MT"};
+        ArrayAdapter<String> StateAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, StateItems);
         Statespinner.setAdapter(StateAdapter);
 
-        final Spinner Yearsspinner = (Spinner)findViewById(R.id.YearsSpinner);
-        String[] YearItems = new String[]{"1","2","3","4","5"};
-        ArrayAdapter<String> YearAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,YearItems);
+        final Spinner Yearsspinner = (Spinner) findViewById(R.id.YearsSpinner);
+        String[] YearItems = new String[]{"1", "2", "3", "4", "5"};
+        ArrayAdapter<String> YearAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, YearItems);
         Yearsspinner.setAdapter(YearAdapter);
 
-        final EditText firstName = (EditText)findViewById(R.id.firstNameInput);
-        final EditText lastName = (EditText)findViewById(R.id.lastNameInput);
-        final EditText emailInput = (EditText)findViewById(R.id.emailInput);
-        final EditText phoneInput = (EditText)findViewById(R.id.phoneInput);
-        final EditText departCityInput = (EditText)findViewById(R.id.DepartureCityInput);
-        final EditText departYearInput = (EditText)findViewById(R.id.DepartureYearInput);
-        final EditText PlacementPref = (EditText)findViewById(R.id.PrefectureInput);
-        final EditText yearsCompleteInput = (EditText)findViewById(R.id.YearCompletionInput);
-        final EditText PlacementCity = (EditText)findViewById(R.id.PlacementCityInput);
-        final TextView ErrorMessage = (TextView)findViewById(R.id.errorMessage);
+        final EditText firstName = (EditText) findViewById(R.id.firstNameInput);
+        final EditText lastName = (EditText) findViewById(R.id.lastNameInput);
+        final EditText emailInput = (EditText) findViewById(R.id.emailInput);
+        final EditText phoneInput = (EditText) findViewById(R.id.phoneInput);
+        final EditText departCityInput = (EditText) findViewById(R.id.DepartureCityInput);
+        final EditText departYearInput = (EditText) findViewById(R.id.DepartureYearInput);
+        final EditText PlacementPref = (EditText) findViewById(R.id.PrefectureInput);
+        final EditText yearsCompleteInput = (EditText) findViewById(R.id.YearCompletionInput);
+        final EditText PlacementCity = (EditText) findViewById(R.id.PlacementCityInput);
+        final TextView ErrorMessage = (TextView) findViewById(R.id.errorMessage);
+        final ScrollView sv = (ScrollView) findViewById(R.id.sv);
 
+        ((EditText)findViewById(R.id.firstNameInput)).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
 
+                    ErrorMessage.setText("");
+                }
+            }
+        });
         submitButton.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -79,28 +104,30 @@ public class Registration extends ActionBarActivity {
                         final RadioGroup interviews = (RadioGroup) findViewById(R.id.JETInterviewsBool);
                         final RadioGroup preDeparture = (RadioGroup) findViewById(R.id.preDepartureBool);
                         final RadioGroup recruiting = (RadioGroup) findViewById(R.id.JETRecruitingBool);
-                        RadioButton InterviewInput = ((RadioButton)findViewById(interviews.getCheckedRadioButtonId()));
-                        RadioButton preDepartInput = ((RadioButton)findViewById(preDeparture.getCheckedRadioButtonId()));
-                        RadioButton recruitingInput = ((RadioButton)findViewById(recruiting.getCheckedRadioButtonId()));
+                        final RadioGroup consent = (RadioGroup) findViewById(R.id.ConsulateInfo);
+
+                        Date dateobj = new Date();
+
+                        RadioButton InterviewInput = ((RadioButton) findViewById(interviews.getCheckedRadioButtonId()));
+                        RadioButton preDepartInput = ((RadioButton) findViewById(preDeparture.getCheckedRadioButtonId()));
+                        RadioButton recruitingInput = ((RadioButton) findViewById(recruiting.getCheckedRadioButtonId()));
+                        RadioButton consentInput = ((RadioButton) findViewById(consent.getCheckedRadioButtonId()));
                         FileOutputStream outputStream;
-                        if(first.equals("") || last.equals("") || email.equals(""))
-                        {
-                            if(first.equals(""))
-                            {
+                        if (first.equals("") || last.equals("") || email.equals("")) {
+                            if (first.equals("")) {
                                 firstName.setBackgroundResource(R.drawable.red_box);
                             }
-                            if(last.equals(""))
-                            {
+                            if (last.equals("")) {
                                 lastName.setBackgroundResource(R.drawable.red_box);
                             }
-                            if(email.equals(""))
-                            {
+                            if (email.equals("")) {
                                 emailInput.setBackgroundResource(R.drawable.red_box);
                             }
                             ErrorMessage.setText("There is missing information.");
                             //firstName.setBackgroundColor(getResources().getColor(android.R.color.holo_red_light));
-                        }
-                        else {
+                        } else if (consentInput == null) {
+                            ErrorMessage.setText("You must answer the question of consent.");
+                        } else {
 
                             try {
 
@@ -110,6 +137,7 @@ public class Registration extends ActionBarActivity {
 
                                 BufferedWriter output = new BufferedWriter(new FileWriter(file, true));
                                 output.write("---------------------\n");
+                                output.write("Date: " + df.format(dateobj) + "\n");
                                 output.write("First Name: " + first + "\n");
                                 output.write("Last Name: " + last + "\n");
                                 output.write("Email: " + email + "\n");
@@ -141,8 +169,11 @@ public class Registration extends ActionBarActivity {
                                         recruitingInput.setChecked(false);
                                     }
                                 }
-
+                                output.write("CGJ consent: " + consentInput.getText().toString() + "\n");
                                 output.close();
+                                firstName.setBackgroundResource(R.drawable.box);
+                                lastName.setBackgroundResource(R.drawable.box);
+                                emailInput.setBackgroundResource(R.drawable.box);
                                 firstName.setText("");
                                 lastName.setText("");
                                 emailInput.setText("");
@@ -152,11 +183,18 @@ public class Registration extends ActionBarActivity {
                                 PlacementPref.setText("");
                                 yearsCompleteInput.setText("");
                                 PlacementCity.setText("");
-                                ErrorMessage.setText("Submitted successfully. Thank you!");
+                                consentInput.setChecked(false);
 
-                                firstName.setBackgroundResource(R.drawable.box);
-                                lastName.setBackgroundResource(R.drawable.box);
-                                emailInput.setBackgroundResource(R.drawable.box);
+                                sv.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        sv.fullScroll(View.FOCUS_DOWN);
+                                    }
+                                });
+
+                                ErrorMessage.setText("Submitted successfully. Thank you!");
+                                //ErrorMessage.setText("");
+
                                 //outputStream = openFileOutput(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).toString()+"/register_info.txt");
                                 //outputStream.write(first.getBytes());
                                 //outputStream.flush();
@@ -179,6 +217,10 @@ public class Registration extends ActionBarActivity {
                     }
                 });
 
+        //sv.fullScroll(View.FOCUS_DOWN);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
@@ -204,4 +246,43 @@ public class Registration extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Registration Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://org.pnwjetaa.jetaa/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Registration Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://org.pnwjetaa.jetaa/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
 }
